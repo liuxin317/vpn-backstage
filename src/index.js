@@ -19,7 +19,7 @@ import 'core-js/fn/object/assign';
 // 为旧版本提供promise polyfill
 require('es6-promise').polyfill();
 
-Store.dispatch({ type: Type.LOAD_STATE, payload: { loading: true } });
+Store.dispatch({ type: Type.LOAD_STATE, payload: { loading: false } });
 
 ReactDOM.render(
   <Provider store={ Store }>
