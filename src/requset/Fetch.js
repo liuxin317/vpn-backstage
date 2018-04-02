@@ -1,16 +1,20 @@
 import { message } from 'antd';
 import Types from '../action/Type';
 import Store from '../store';
-
+import serverGoBackInfo from '../configure/serverGoBackInfo';
+import { removeCookie } from '../components/common/methods';
 // 格式化请求参数
 function formatParam(param = {}) {
     let qArr = [];
 
     for (let k in param) {
         let val = param[k];
-        if (typeof val !== 'string') {
-            val = val.toString();
+        if (val) {
+            if (typeof val !== 'string') {
+                val = String(val);
+            }
         }
+        
         qArr.push(encodeURIComponent(k) + '=' + encodeURIComponent(val));
     }
     return qArr.join('&');
@@ -41,6 +45,8 @@ function httpRequest (url, method, params, successBack, errorBack = null) {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
+        mode: "no-cors", // 允许跨域
+        credentials: 'include', // 自动发送本地cookies
         ...newOptions
     })
     .then(response => {
@@ -49,7 +55,37 @@ function httpRequest (url, method, params, successBack, errorBack = null) {
     .then(data => {
         Store.dispatch({ type: Types.LOAD_STATE, payload: { loading: false } });
 
-        successBack && successBack(data);
+        if (String(data.code) === "200") {
+            successBack && successBack(data);
+        } else if (String(data.code) === "401") {
+            message.warning('登录失效，请重新登录');
+
+            // 删除失效token
+            removeCookie("JSESSIONID");
+            window.location.href = "/";
+        } if (String(data.code) === "404") {
+            message.error('资源未找到');
+        } else if (String(data.code) === "500")  {
+            message.error('服务器内部错误');
+        } else if (String(data.code) === "403") {
+            message.error('禁止访问');
+        } else if (String(data.code) === "501") { // 参数错误
+            let messages = [];
+
+            data.info.forEach(item => {
+                for (let key in serverGoBackInfo) {
+                    if (String(item) === String(key)) {
+                        messages.push(serverGoBackInfo[key])
+                    }
+                }
+            })
+
+            if (!messages.length) {
+                message.warning("参数错误");
+            } else {
+                message.warning(messages.join(','));
+            }
+        }
     })
     .catch(error => {
         Store.dispatch({ type: Types.LOAD_STATE, payload: { loading: false } });

@@ -1,23 +1,50 @@
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, message } from 'antd';
 // import log from '../../imgs/logoicon.svg';
+import HttpRequest from '../../requset/Fetch';
 import "./style.scss";
 
 const FormItem = Form.Item;
 
 class Login extends Component {
+  state = {
+    codeImg: "", // 验证码图片
+  }
+
+  componentDidMount () {
+    this.getGenerateCode();
+  }
+
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        const { account, password, code } = values;
+
+        HttpRequest("/manager/login", "POST", {
+          account, 
+          password, 
+          code 
+        }, res => {
+          message.success("登陆成功！");
+        })
       }
     });
   }
 
+  // 生成验证码
+  getGenerateCode = () => {
+    HttpRequest("/code/generate/4/150/40", "GET", {}, res => {
+      this.setState({
+        codeImg: res.data
+      })
+    })
+  }
+
   render () {
     const { getFieldDecorator } = this.props.form;
-
+    const { codeImg } = this.state;
+    
     return (
       <section className="login-box">
         <div className="login-content">
@@ -31,7 +58,7 @@ class Login extends Component {
             <div className="input-group">
               <Form onSubmit={this.handleSubmit} className="login-form">
                 <FormItem>
-                  {getFieldDecorator('userName', {
+                  {getFieldDecorator('account', {
                     rules: [{ required: true, message: '请输入帐号！' }],
                   })(
                     <Input prefix={<Icon type="user" style={{ color: "white", fontSize: "18px" }} />} placeholder="请输入帐号" />
@@ -41,8 +68,19 @@ class Login extends Component {
                   {getFieldDecorator('password', {
                     rules: [{ required: true, message: '请输入密码！' }],
                   })(
-                    <Input prefix={<Icon type="lock" style={{ color: "white", fontSize: "18px" }} />} type="password" placeholder="请输入密码！" />
+                    <Input prefix={<Icon type="lock" style={{ color: "white", fontSize: "18px" }} />} type="password" placeholder="请输入密码" />
                   )}
+                </FormItem>
+
+                <FormItem>
+                  {getFieldDecorator('code', {
+                    rules: [{ required: true, message: '请输入验证码！' }],
+                  })(
+                    <Input className="pull-left code-input" style={{ width: 255 }} type="text" placeholder="请输入验证码" />
+                  )}
+                  <div className="pull-right" style={{width: 130, height: 46, border: "1px solid #cfd2e5", borderRadius: "5px"}} onClick={ this.getGenerateCode }>
+                    <img src={ codeImg } alt="" style={{ width: 130, height: 46, cursor: "pointer" }}/>
+                  </div>
                 </FormItem>
 
                 <FormItem>
