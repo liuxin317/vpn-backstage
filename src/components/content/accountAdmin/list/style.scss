@@ -1,0 +1,25 @@
+.account-list-box {
+  padding: 20px;
+}
+
+.shield-box {
+  .input-group {
+    display: flex;
+    align-items: center;
+
+    label {
+      width: 20%;
+      text-align: right;
+    }
+  
+    .input-number {
+      width: 40%;
+    }
+
+    .monad {
+      width: 40%;
+      margin-left: 10px;
+      font-size: 14px;
+    }
+  }
+}

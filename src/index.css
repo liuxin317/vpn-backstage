@@ -57,6 +57,15 @@ li {
   animation: moveImg 2s linear infinite;
 }
 
+.none {
+  display: none;
+}
+
+.content-box {
+  min-width: 1200px;
+  margin: 0 auto;
+}
+
 @keyframes showHide {
   0% {
     opacity: 1;

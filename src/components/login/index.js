@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Form, Icon, Input, Button, message } from 'antd';
-// import log from '../../imgs/logoicon.svg';
 import HttpRequest from '../../requset/Fetch';
+import { Redirect } from 'react-router-dom';
+import { setCookie } from '../common/methods';
 import "./style.scss";
 
 const FormItem = Form.Item;
@@ -9,12 +10,14 @@ const FormItem = Form.Item;
 class Login extends Component {
   state = {
     codeImg: "", // 验证码图片
+    isLogin: false, // 跳转页面状态
   }
 
   componentDidMount () {
     this.getGenerateCode();
   }
 
+  // 登录提交
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -27,6 +30,10 @@ class Login extends Component {
           code 
         }, res => {
           message.success("登陆成功！");
+          setCookie("userInfo", JSON.stringify(res.data));
+          this.setState({
+            isLogin: true
+          })
         })
       }
     });
@@ -36,21 +43,24 @@ class Login extends Component {
   getGenerateCode = () => {
     HttpRequest("/code/generate/4/150/40", "GET", {}, res => {
       this.setState({
-        codeImg: res.data
+        codeImg: res.data.code
       })
     })
   }
 
   render () {
     const { getFieldDecorator } = this.props.form;
-    const { codeImg } = this.state;
-    
+    const { codeImg, isLogin } = this.state;
+
+    if (isLogin) {
+      return <Redirect push to="/content" />
+    }
+
     return (
       <section className="login-box">
         <div className="login-content">
           <div className="login-input-box">
             <figure className="login-title">
-              {/* <img src={ log } alt=""/> */}
               <figcaption>VPN管理后台</figcaption>
             </figure>
 

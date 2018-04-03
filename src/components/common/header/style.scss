@@ -1,0 +1,149 @@
+.head-top {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  padding: 0 20px;
+  background-color: #555999;
+
+  .head-top__title {
+    flex: 1;
+    h2 {
+      margin-bottom: 0;
+      color: white;
+    }
+  }
+
+  .head-top__navbar {
+    flex: 6;
+
+    .menu-list {
+      display: flex;
+      height: 60px;
+
+      li {
+        display: flex;
+        position: relative;
+        z-index: 100;
+        justify-content: center;
+        align-items: center;
+        width: 128px;
+        cursor: pointer;
+
+        &::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 1px;
+          height: 60px;
+          box-shadow: -1px 0 0 #474b80;
+          background-color: #6469b3;
+        }
+
+        &.active {
+          background-color: #474b80;
+        }
+
+        figure {
+          margin-bottom: 0;
+          text-align: center;
+          font-size: 14px;
+          color: white;
+        }
+
+        &:hover {
+          background-color: #474b80;
+          
+          .two-menu {
+            display: block;
+          }
+        }
+
+        .two-menu {
+          display: none;
+          position: absolute;
+          top: 60px;
+          left: 0;
+          width: 128px;
+          padding: 10px;
+          background-color: white;
+          box-shadow: 0 0 5px hsla(0,0%,50%,.35);
+
+          li {
+            position: relative;
+            width: 100%;
+            height: 32px;
+            line-height: 32px;
+            background-color: #fff;
+            cursor: pointer;
+
+            &::before {
+              content: "";
+              width: 0;
+              height:0;
+            }
+
+            &:hover {
+              color: #40a9ff;
+            }
+
+            .last-menu {
+              display: none;
+              position: absolute;
+              top: 0;
+              left: 128px;
+              width: 128px;
+              padding: 10px;
+              background-color: white;
+              box-shadow: 0 0 5px hsla(0,0%,50%,.35);
+
+              li {
+                position: relative;
+                width: 100%;
+                height: 32px;
+                line-height: 32px;
+                background-color: #fff;
+                cursor: pointer;
+
+                &::before {
+                  content: "";
+                  width: 0;
+                  height:0;
+                }
+
+                &:hover {
+                  color: #40a9ff;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .user-info__group {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: white;
+
+    .anticon-user-add {
+      font-size: 18px;
+    }
+
+    .nickName {
+      margin-bottom: 0;
+      margin-left: 10px;
+    }
+
+    .exit {
+      margin-left: 10px;
+      color: white;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

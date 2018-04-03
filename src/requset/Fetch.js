@@ -2,7 +2,7 @@ import { message } from 'antd';
 import Types from '../action/Type';
 import Store from '../store';
 import serverGoBackInfo from '../configure/serverGoBackInfo';
-import { removeCookie } from '../components/common/methods';
+import { removeCookie, setCookie } from '../components/common/methods';
 // 格式化请求参数
 function formatParam(param = {}) {
     let qArr = [];
@@ -34,7 +34,9 @@ function httpRequest (url, method, params, successBack, errorBack = null) {
     let newOptions = {};
 
     if (method === 'GET') { // 区分请求方式传参方式不一样
-        url = url + '?' + formatParam(params);
+        if (JSON.stringify(params) !== "{}") {
+            url = url + '?' + formatParam(params);
+        }
     } else {
         params = formatParam(params);
         newOptions.body = params;
@@ -57,11 +59,15 @@ function httpRequest (url, method, params, successBack, errorBack = null) {
 
         if (String(data.code) === "200") {
             successBack && successBack(data);
+            if (data.data && data.data.cookieId) {
+                setCookie("JSESSIONID", data.data.cookieId)
+            }
         } else if (String(data.code) === "401") {
             message.warning('登录失效，请重新登录');
 
             // 删除失效token
             removeCookie("JSESSIONID");
+            removeCookie("userInfo");
             window.location.href = "/";
         } if (String(data.code) === "404") {
             message.error('资源未找到');
@@ -88,6 +94,7 @@ function httpRequest (url, method, params, successBack, errorBack = null) {
         }
     })
     .catch(error => {
+        console.log(error);
         Store.dispatch({ type: Types.LOAD_STATE, payload: { loading: false } });
 
         message.error('喔唷，崩溃啦！');
