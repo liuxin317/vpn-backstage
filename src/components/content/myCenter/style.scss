@@ -1,0 +1,54 @@
+.center-box {
+  padding: 20px;
+
+  .center-content {
+    margin-top: 30px;
+    padding: 40px 50px;
+    background-color: #f8f8f8;
+    
+    .user-info {
+      position: relative;
+      height: 20px;
+      padding-left: 15px;
+      line-height: 20px;
+      font-size: 16px;
+      color: #555999;
+      align-items: left;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 2px;
+        height: 20px;
+        background-color: #555999;
+      }
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      width: 480px;
+      margin: 0 auto;
+      margin-bottom: 20px;
+      
+      .name {
+        flex: 1;
+        text-align: right;
+      }
+
+      .input {
+        flex: 4;
+        display: flex;
+        align-items: center;
+        height: 40px;
+        margin-left: 5px;
+      }
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+  }
+}

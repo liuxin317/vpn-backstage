@@ -83,6 +83,13 @@
         .code-input {
           padding-left: 10px;
         }
+        
+        .prompt-group {
+          span.ant-form-item-children {
+            display: block;
+            overflow: hidden;
+          }
+        }
       }
     }
   }

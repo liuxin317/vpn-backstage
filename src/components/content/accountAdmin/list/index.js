@@ -14,7 +14,23 @@ class AccountList extends Component {
   }
 
   componentDidMount () {
-    this.getUserList()
+    const { params } = this.props.match;
+
+    if (params.type === "1") {
+      this.getUserList()
+    } else if (params.type === "2") {
+      this.getBlacklist()
+    }
+  }
+
+  componentWillReceiveProps (nextProps) {
+    const { params } = nextProps.match;
+
+    if (params.type === "1") {
+      this.getUserList()
+    } else if (params.type === "2") {
+      this.getBlacklist()
+    }
   }
 
   // 获取用户列表
@@ -22,6 +38,20 @@ class AccountList extends Component {
     const { pageSize, pageNumber } = this.state;
 
     HttpRequest(`/user/query/${ pageNumber }/${ pageSize }`, "GET", {}, res => {
+      this.setState({
+        userList: res.data
+      })
+    })
+  }
+
+  // 获取黑名单列表
+  getBlacklist = () => {
+    const { pageSize, pageNumber } = this.state;
+
+    HttpRequest("/blacklist/manager/query", "GET", {
+      page: pageNumber,
+      size: pageSize
+    }, res => {
       this.setState({
         userList: res.data
       })
@@ -58,6 +88,7 @@ class AccountList extends Component {
     this.setState({
       rowData,
       visibleShield: true,
+      time: ""
     });
   }
 
@@ -87,86 +118,174 @@ class AccountList extends Component {
   }
 
   render () {
-    const { userList, pageSize, pageNumber } = this.state;
-    const columns = [{
-      title: '帐号名称',
-      dataIndex: 'account',
-      key: 'account'
-    }, {
-      title: '性别',
-      dataIndex: 'sex',
-      key: 'sex',
-      render: (text, record) => {
-        return (
-          record.sex === 1
-          ?
-          <span>男</span>
-          :
-          record.sex === 2
-          ?
-          <span>女</span>
-          :
-          <span>--</span>
-        )
-      }
-    }, {
-      title: '业务状态',
-      dataIndex: 'status',
-      key: 'status',
-      render: (text, record) => {
-        return (
-          record.status === 0
-          ?
-          <span>未激活</span>
-          :
-          <span>正常用户</span>
-        )
-      }
-    }, {
-      title: '账户类型',
-      dataIndex: 'state',
-      key: 'state',
-      render: (text, record) => {
-        return (
-          record.state === 0
-          ?
-          <span>按流量</span>
-          :
-          record.state === 1
-          ?
-          <span>持续时长</span>
-          :
-          <span>自然时长</span>
-        )
-      }
-    }, {
-      title: '注册时间',
-      dataIndex: 'time',
-      key: 'time',
-      render: (text, record) => {
-        return (
-          record.time
-          ?
-          <span>{ record.time }</span>
-          :
-          <span>--</span>
-        )
-      }
-    }, {
-      title: '操作',
-      key: 'handle',
-      render: (text, record) => {
-        return (
-          <div className="handle-group">
-            <a onClick={ this.showModalShield.bind(this, record) }>拉黑</a>
-          </div>
-        )
-      }
-    }];
+    const { userList, pageSize, pageNumber, time } = this.state;
+    const { params } = this.props.match;
+    let columns;
+
+    if (params.type === "1") { // 账户列表
+      columns = [{
+        title: '用户id',
+        dataIndex: 'id',
+        key: 'id'
+      }, {
+        title: '账号名称',
+        dataIndex: 'account',
+        key: 'account',
+        width: "15%",
+        render: (text, record) => {
+          return (
+            record.account
+            ?
+            <span>{ record.account }</span>
+            :
+            record.email
+            ?
+            <span>{ record.email }</span>
+            :
+            ""
+          )
+        }
+      }, {
+        title: '性别',
+        dataIndex: 'sex',
+        key: 'sex',
+        render: (text, record) => {
+          return (
+            record.sex === 1
+            ?
+            <span>男</span>
+            :
+            record.sex === 2
+            ?
+            <span>女</span>
+            :
+            <span>--</span>
+          )
+        }
+      }, {
+        title: '业务状态',
+        dataIndex: 'status',
+        key: 'status',
+        render: (text, record) => {
+          return (
+            record.status === 0
+            ?
+            <span>未激活</span>
+            :
+            <span>正常用户</span>
+          )
+        }
+      }, {
+        title: '账户类型',
+        dataIndex: 'state',
+        key: 'state',
+        render: (text, record) => {
+          return (
+            record.state === 0
+            ?
+            <span>按流量</span>
+            :
+            record.state === 1
+            ?
+            <span>持续时长</span>
+            :
+            <span>自然时长</span>
+          )
+        }
+      }, {
+        title: '注册时间',
+        dataIndex: 'time',
+        key: 'time',
+        render: (text, record) => {
+          return (
+            record.time
+            ?
+            <span>{ record.time }</span>
+            :
+            <span>--</span>
+          )
+        }
+      }, {
+        title: '操作',
+        key: 'handle',
+        render: (text, record) => {
+          return (
+            <div className="handle-group">
+              <a onClick={ this.showModalShield.bind(this, record) }>拉黑</a>
+            </div>
+          )
+        }
+      }];
+    } else if (params.type === "2") { // 黑名单列表
+      columns = [{
+        title: '用户id',
+        dataIndex: 'uid',
+        key: 'uid'
+      }, {
+        title: '业务状态',
+        dataIndex: 'status',
+        key: 'status',
+        render: (text, record) => {
+          return (
+            record.status === 0
+            ?
+            <span>未激活</span>
+            :
+            <span>正常用户</span>
+          )
+        }
+      }, {
+        title: '账户类型',
+        dataIndex: 'state',
+        key: 'state',
+        render: (text, record) => {
+          return (
+            record.state === 0
+            ?
+            <span>按流量</span>
+            :
+            record.state === 1
+            ?
+            <span>持续时长</span>
+            :
+            <span>自然时长</span>
+          )
+        }
+      }, {
+        title: '注册时间',
+        dataIndex: 'time',
+        key: 'time',
+        render: (text, record) => {
+          return (
+            record.time
+            ?
+            <span>{ record.time }</span>
+            :
+            <span>--</span>
+          )
+        }
+      }, {
+        title: '拉黑时间',
+        key: 'duration',
+        render: (text, record) => {
+          return (
+            <span>{ record.duration }s</span>
+          )
+        }
+      }, {
+        title: '剩余时间',
+        key: 'end',
+        render: (text, record) => {
+          return (
+            <span>{ record.end - record.start }s</span>
+          )
+        }
+      }];
+    }
 
     return (
       <section className="account-list-box">
-        <h3>当前位置：账号列表</h3>
+        <h3>当前位置：{ params ? params.type === "1" ? "账号列表" : "黑名单" : "" }</h3>
 
         <div className="table-box">
           <Table 
@@ -187,7 +306,7 @@ class AccountList extends Component {
           <div className="shield-box">
             <div className="input-group">
               <label htmlFor="">拉黑时长：</label>
-              <InputNumber className="input-number" min={1} placeholder="请输入时长" onChange={ this.handleChangeTime } />
+              <InputNumber className="input-number" min={1} value={ time } placeholder="请输入时长" onChange={ this.handleChangeTime } />
               <span className="monad">s</span>
             </div>
           </div>

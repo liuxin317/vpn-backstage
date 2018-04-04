@@ -14,7 +14,7 @@ class AccountAdmin extends Component {
 
     return (
       <section>
-        <Route path={`${ match.path }/list`} component={ LoadAccountList } />
+        <Route path={`${ match.path }/list/:type`} component={ LoadAccountList } />
       </section>
     )
   }

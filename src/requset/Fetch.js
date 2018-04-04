@@ -60,7 +60,7 @@ function httpRequest (url, method, params, successBack, errorBack = null) {
         if (String(data.code) === "200") {
             successBack && successBack(data);
             if (data.data && data.data.cookieId) {
-                setCookie("JSESSIONID", data.data.cookieId)
+                setCookie("JSESSIONID", data.data.cookieId);
             }
         } else if (String(data.code) === "401") {
             message.warning('登录失效，请重新登录');
@@ -68,7 +68,9 @@ function httpRequest (url, method, params, successBack, errorBack = null) {
             // 删除失效token
             removeCookie("JSESSIONID");
             removeCookie("userInfo");
-            window.location.href = "/";
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 500);
         } if (String(data.code) === "404") {
             message.error('资源未找到');
         } else if (String(data.code) === "500")  {

@@ -169,6 +169,7 @@ class Head extends Component {
       message.success("退出成功！");
       removeCookie("JSESSIONID");
       removeCookie("userInfo");
+      
       setTimeout(() => {
         this.setState({
           redirect: true
@@ -195,7 +196,7 @@ class Head extends Component {
         </div>
         <div className="user-info__group">
           <Icon type="user-add" />
-          <p className="nickName">{ userInfo.nickName }</p>
+          <p className="nickName">{ userInfo.name }</p>
           <a className="exit" onClick={ this.handleExit }>退出</a>
         </div>
       </header>

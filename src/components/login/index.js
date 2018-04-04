@@ -82,15 +82,16 @@ class Login extends Component {
                   )}
                 </FormItem>
 
-                <FormItem>
+                <FormItem className="prompt-group">
                   {getFieldDecorator('code', {
                     rules: [{ required: true, message: '请输入验证码！' }],
                   })(
                     <Input className="pull-left code-input" style={{ width: 255 }} type="text" placeholder="请输入验证码" />
                   )}
-                  <div className="pull-right" style={{width: 130, height: 46, border: "1px solid #cfd2e5", borderRadius: "5px"}} onClick={ this.getGenerateCode }>
+                  <div className="pull-right" style={{width: 130, height: 46, border: "1px solid #cfd2e5", borderRadius: "5px", overflow: "hidden"}} onClick={ this.getGenerateCode }>
                     <img src={ codeImg } alt="" style={{ width: 130, height: 46, cursor: "pointer" }}/>
                   </div>
+                  <div className="clear"></div>
                 </FormItem>
 
                 <FormItem>

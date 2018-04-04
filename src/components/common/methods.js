@@ -36,7 +36,7 @@ function setCookie(name, value, iDay) {
 
     oDate.setDate(oDate.getDate()+iDay);
 
-    document.cookie=name+'='+encodeURIComponent(value)+';expires='+oDate;
+    document.cookie=name+'='+encodeURIComponent(value)+';expires='+oDate+';path=/';
 }
 
 // 删除cookie;
