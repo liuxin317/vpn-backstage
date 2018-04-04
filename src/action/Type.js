@@ -3,4 +3,5 @@
 export default {
   LOAD_STATE: 'LOAD_STATE', //加载状态
   MENU_DATA: 'MENU_DATA', // 菜单数据
+  DEFAULT_MNUE: 'DEFAULT_MNUE', // 默认菜单
 }

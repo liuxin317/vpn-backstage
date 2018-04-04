@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import Head from '../common/header';
 import loadable from "react-loadable";
-import {Route, Link} from 'react-router-dom';
+import {Route, Redirect} from 'react-router-dom';
 import PreLoading from '../common/Preloading';
+import { connect } from 'react-redux';
 import './style.scss';
 
 // VPN管理
@@ -25,17 +26,22 @@ const LoadMyCenter = loadable({
 
 class Content extends Component {
   render () {
-    const { match } = this.props;
+    const { match, defaultMnue } = this.props;
 
     return (
       <section className="content">
         <Head />
 
         <div className="content-box">
-          <Link to={{ pathname: "/content/vpn-admin" }}>vpn管理</Link>
-          <Link to={{ pathname: "/content/account/list/1"}}>账户列表</Link>
-          <Link to={{ pathname: "/content/account/list/2"}}>黑名单</Link>
-          <Link to={{ pathname: "/content/center"}}>个人中心</Link>
+          {
+            defaultMnue
+            ?
+            <Route path={`${ match.path }`} exact render={() => {
+              return <Redirect push to={ defaultMnue } />
+            }} />
+            :
+            ""
+          }
           
           <Route path={`${ match.path }/vpn-admin`} component={ LoadVpnAdmin } />
           <Route path={`${ match.path }/account`} component={ LoadAccountAdmin } />
@@ -46,4 +52,14 @@ class Content extends Component {
   }
 }
 
-export default Content;
+const mapStateToProps = (store) => {
+  return {
+    defaultMnue: store.common.defaultMnue
+  }
+}
+
+const ConnectContent = connect(
+  mapStateToProps
+)(Content)
+
+export default ConnectContent;
