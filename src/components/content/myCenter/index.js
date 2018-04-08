@@ -22,7 +22,7 @@ class MyCenter extends Component {
 
   // 获取个人信息
   getUserInfo = () => {
-    HttpRequest("/manager/info", "GET", {}, res => {
+    HttpRequest("/manager/info", "POST", {}, res => {
       this.setState({
         userInfo: res.data,
         sexValue: res.data.sex,
@@ -37,7 +37,11 @@ class MyCenter extends Component {
   // 监听性别
   onChangeInput = (type, e) => {
     let obj = {}
-    obj[type] = e.target.value.trim();
+    if (type === "sexValue") {
+      obj[type] = e.target.value;
+    } else {
+      obj[type] = e.target.value.trim();
+    }
 
     this.setState({
       ...obj

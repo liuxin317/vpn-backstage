@@ -41,7 +41,7 @@ class Login extends Component {
 
   // 生成验证码
   getGenerateCode = () => {
-    HttpRequest("/code/generate/4/150/40", "GET", {}, res => {
+    HttpRequest("/code/generate/4/150/40", "POST", {}, res => {
       this.setState({
         codeImg: res.data.code
       })

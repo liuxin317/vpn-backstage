@@ -37,7 +37,7 @@ class AccountList extends Component {
   getUserList = () => {
     const { pageSize, pageNumber } = this.state;
 
-    HttpRequest(`/user/query/${ pageNumber }/${ pageSize }`, "GET", {}, res => {
+    HttpRequest(`/user/query/${ pageNumber }/${ pageSize }`, "POST", {}, res => {
       this.setState({
         userList: res.data
       })
@@ -48,7 +48,7 @@ class AccountList extends Component {
   getBlacklist = () => {
     const { pageSize, pageNumber } = this.state;
 
-    HttpRequest("/blacklist/manager/query", "GET", {
+    HttpRequest("/blacklist/manager/query", "POST", {
       page: pageNumber,
       size: pageSize
     }, res => {
@@ -71,7 +71,7 @@ class AccountList extends Component {
   setShield = () => {
     const { rowData, time } = this.state;
 
-    HttpRequest("/blacklist/black", "GET", {
+    HttpRequest("/blacklist/black", "POST", {
       uid: rowData.id,
       time
     }, res => {
@@ -221,6 +221,27 @@ class AccountList extends Component {
         title: '用户id',
         dataIndex: 'uid',
         key: 'uid'
+      }, {
+        title: '账号名称',
+        dataIndex: 'account',
+        key: 'account',
+        render: (text, record) => {
+          return (
+            record.user
+            ?
+            record.user.account
+            ?
+            <span>{ record.user.account }</span>
+            :
+            record.user.email
+            ?
+            <span>{ record.user.email }</span>
+            :
+            ""
+            :
+            ""
+          )
+        }
       }, {
         title: '业务状态',
         dataIndex: 'status',

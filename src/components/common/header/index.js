@@ -136,7 +136,7 @@ class Head extends Component {
 
   // 获取菜单权限
   getMenuPermission = () => {
-    HttpRequest("/menu/tree", "GET", {}, res => {
+    HttpRequest("/menu/tree", "POST", {}, res => {
       Store.dispatch({ type: Type.MENU_DATA, payload: { menuData: this.handleMenuData(res.data) } });
       this.defaultGetMnueOne()
     })
@@ -219,7 +219,7 @@ class Head extends Component {
 
   // 退出接口
   handleExit = () => {
-    HttpRequest("/manager/logout", "GET", { test: 1 }, res => {
+    HttpRequest("/manager/logout", "POST", { test: 1 }, res => {
       message.success("退出成功！");
       removeCookie("JSESSIONID");
       removeCookie("userInfo");
