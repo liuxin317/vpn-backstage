@@ -82,7 +82,7 @@ module.exports = function(proxy, allowedHost) {
     public: allowedHost,
     proxy: [{ // 如果要将多个特定路径代理给同一个目标，可以使用具有上下文属性的一个或多个对象的数组：
       context: ["/code", "/manager", "/menu", "/lc", "/user", "/blacklist"],
-      target: "https://192.168.10.24:8081",
+      target: "https://23.83.234.121:8443",
       "changeOrigin": true, // 转发时一定要添加此属性，允许跨域
       "secure": false
     }],
